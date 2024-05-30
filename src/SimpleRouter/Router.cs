@@ -4,16 +4,17 @@ public sealed class Router(RouteFactory createRoute) : IRouter
 {
     private const int s_stackLimit = 50;
     private IRoute? _current;
-    private readonly List<IRoute?> _stack = [];
+    private readonly List<IRoute> _stack = [];
     private readonly RouteFactory _createRoute = createRoute ?? throw new ArgumentNullException(nameof(createRoute));
 
-    public IReadOnlyList<IRoute?> Stack => _stack;
+    public IReadOnlyList<IRoute> Stack => _stack;
 
     public IRoute? Current
     {
         get => _current;
         private set
         {
+            ArgumentNullException.ThrowIfNull(value);
             if (value != _current)
             {
                 OnRouteChanging?.Invoke(this, new RouteChangingEventArgs(_current, value));
@@ -42,28 +43,28 @@ public sealed class Router(RouteFactory createRoute) : IRouter
         return Current;
     }
 
-    public IRoute? NavigateTo<T>() where T : IRoute
+    public IRoute NavigateTo<T>() where T : IRoute
     {
         var destination = _createRoute(typeof(T)) ?? throw new InvalidOperationException("Failed to create view model");
         Current = destination;
         return Current;
     }
 
-    public IRoute? NavigateTo<T>(params object[] parameters) where T : IRoute
+    public IRoute NavigateTo<T>(params object[] parameters) where T : IRoute
     {
         var destination = _createRoute(typeof(T), parameters) ?? throw new InvalidOperationException("Failed to create view model");
         Current = destination;
         return Current;
     }
 
-    public IRoute? NavigateTo(Type type)
+    public IRoute NavigateTo(Type type)
     {
         var destination = _createRoute(type) ?? throw new InvalidOperationException("Failed to create view model");
         Current = destination;
         return Current;
     }
 
-    public IRoute? NavigateTo(Type type, params object[] parameters)
+    public IRoute NavigateTo(Type type, params object[] parameters)
     {
         var destination = _createRoute(type, parameters) ?? throw new InvalidOperationException("Failed to create view model");
         Current = destination;
@@ -72,10 +73,10 @@ public sealed class Router(RouteFactory createRoute) : IRouter
 
     public void NavigateTo(IRoute destination)
     {
-        Current = destination;
+        Current = destination ?? throw new ArgumentNullException(nameof(destination));
     }
 
-    public IRoute? NavigateToAndReset<T>() where T : IRoute
+    public IRoute NavigateToAndReset<T>() where T : IRoute
     {
         var destination = _createRoute(typeof(T)) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
@@ -83,15 +84,15 @@ public sealed class Router(RouteFactory createRoute) : IRouter
         return Current;
     }
 
-    public IRoute? NavigateToAndReset<T>(params object[] parameters) where T : IRoute
+    public IRoute NavigateToAndReset<T>(params object[] parameters) where T : IRoute
     {
-        var destination = _createRoute(typeof(T), parameters);
+        var destination = _createRoute(typeof(T), parameters) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
         Current = destination;
         return Current;
     }
 
-    public IRoute? NavigateToAndReset(Type type)
+    public IRoute NavigateToAndReset(Type type)
     {
         var destination = _createRoute(type) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
@@ -99,7 +100,7 @@ public sealed class Router(RouteFactory createRoute) : IRouter
         return Current;
     }
 
-    public IRoute? NavigateToAndReset(Type type, params object[] parameters)
+    public IRoute NavigateToAndReset(Type type, params object[] parameters)
     {
         var destination = _createRoute(type, parameters) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
@@ -113,7 +114,7 @@ public sealed class Router(RouteFactory createRoute) : IRouter
         Current = destination;
     }
 
-    private void AddToStack(IRoute? destination)
+    private void AddToStack(IRoute destination)
     {
         _stack.Add(destination);
         if (_stack.Count > s_stackLimit)
