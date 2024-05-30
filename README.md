@@ -19,11 +19,7 @@ Examples can be found in the Demo projects.
 
 ## Installation
 
-You can install SimpleRouter via NuGet Package Manager Console by running the following command:
-```bash
-Install-Package SimpleRouter
-
-```
+You can install SimpleRouter via [NuGet Package](https://www.nuget.org/packages/IDotta.SimpleRouter/).
 
 ## Running the Tests
 
