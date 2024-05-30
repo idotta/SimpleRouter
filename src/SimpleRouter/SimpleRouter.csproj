@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<PackageId>IDotta.SimpleRouter</PackageId>
+		<Version>1.0.0</Version>
+		<Title>SimpleRouter</Title>
+		<Product>SimpleRouter</Product>
+		<Authors>Iúri Dotta</Authors>
+		<Description>A .NET library for simple route control</Description>
+		<PackageProjectUrl>https://github.com/idotta/SimpleRouter</PackageProjectUrl>
+		<PackageTags>router;mvvm;avalonia;wpf;csharp</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/idotta/SimpleRouter</RepositoryUrl>
+		<Copyright>MIT</Copyright>
+		<Company>Dotta IT Solutions</Company>
+		<!--<PackageIcon></PackageIcon>-->
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>
