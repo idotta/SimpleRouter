@@ -14,7 +14,10 @@ public sealed class Router(RouteFactory createRoute) : IRouter
         get => _current;
         private set
         {
-            ArgumentNullException.ThrowIfNull(value);
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
             if (value != _current)
             {
                 OnRouteChanging?.Invoke(this, new RouteChangingEventArgs(_current, value));
