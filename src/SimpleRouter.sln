@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleRouter.Avalonia.Demo.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleRouter.Avalonia.Demo.Browser", "samples\Avalonia\SimpleRouter.Avalonia.Demo.Browser\SimpleRouter.Avalonia.Demo.Browser.csproj", "{4B396AD2-3FEA-4ED0-81FA-F633821DAF9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleRouter.Avalonia", "SimpleRouter.Avalonia\SimpleRouter.Avalonia.csproj", "{EB7FA04E-7B83-4E55-9290-4B33C50EE8C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{4B396AD2-3FEA-4ED0-81FA-F633821DAF9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B396AD2-3FEA-4ED0-81FA-F633821DAF9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B396AD2-3FEA-4ED0-81FA-F633821DAF9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB7FA04E-7B83-4E55-9290-4B33C50EE8C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7FA04E-7B83-4E55-9290-4B33C50EE8C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7FA04E-7B83-4E55-9290-4B33C50EE8C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB7FA04E-7B83-4E55-9290-4B33C50EE8C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
