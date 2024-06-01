@@ -3,10 +3,10 @@ name: Deploy demo to static pages
 on:
   push:
     branches:
-      - main
+      - deploy-avalonia
 
 env:
-  PUBLISH_DIR: src/samples/Avalonia/SimpleRouter.Avalonia.Demo.Browser/bin/Release/net8.0-browser/browser-wasm/AppBundle/
+  PUBLISH_DIR: src/samples/Avalonia/SimpleRouter.Avalonia.Demo.Browser/bin/Release/net8.0/browser-wasm/AppBundle/
 
 jobs:
   build:
@@ -21,10 +21,6 @@ jobs:
         dotnet-version: 8.0.x
     - name: 'Install workload: wasm-tools'
       run: dotnet workload install wasm-tools
-    - name: Restore dependencies
-      run: dotnet restore src/
-    - name: Build
-      run: dotnet build src/ --no-restore
     - name: 'Publish SimpleRouter.Avalonia.Demo.Browser'
       run: dotnet publish src/samples/Avalonia/SimpleRouter.Avalonia.Demo.Browser/SimpleRouter.Avalonia.Demo.Browser.csproj -c Release
     - name: Fix permissions
