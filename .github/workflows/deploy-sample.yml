@@ -3,6 +3,7 @@ name: Deploy demo to static pages
 on:
   push:
     branches:
+      - main
       - deploy-avalonia
 
 env:
