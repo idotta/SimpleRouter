@@ -1,0 +1,34 @@
+<UserControl
+    x:Class="SimpleRouter.Avalonia.Demo.Views.Page2View"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:SimpleRouter.Avalonia.Demo.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:Page2ViewModel"
+    mc:Ignorable="d">
+    <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
+        <TextBlock
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="This is Page 2" />
+
+        <Button
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Command="{Binding NavigateToPage1Command}"
+            Content="Go to Page1" />
+
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Command="{Binding NavigateToRogueCommand}"
+            Content="Go to Rogue" />
+    </Grid>
+</UserControl>

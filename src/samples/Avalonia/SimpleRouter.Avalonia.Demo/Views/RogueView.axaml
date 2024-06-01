@@ -1,0 +1,36 @@
+<UserControl
+    x:Class="SimpleRouter.Avalonia.Demo.Views.RogueView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:SimpleRouter.Avalonia.Demo.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:RogueViewModel"
+    mc:Ignorable="d">
+    <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
+        <TextBlock
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Run Text="This is Rogue" />
+            <Run FontWeight="DemiBold" Text="{Binding Number}" />
+        </TextBlock>
+
+        <Button
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Command="{Binding NavigateToRogue1Command}"
+            Content="Go to Rogue" />
+
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Command="{Binding NavigateToRogue2Command}"
+            Content="Go to Rogue" />
+    </Grid>
+</UserControl>
