@@ -15,6 +15,7 @@ public class ViewLocator : IDataTemplate
         {
             Page1ViewModel p1 => new Page1View { DataContext = p1 },
             Page2ViewModel p2 => new Page2View { DataContext = p2 },
+            RogueViewModel r => new RogueView { DataContext = r },
             _ => TryDeduceControl(data),
         };
     }
