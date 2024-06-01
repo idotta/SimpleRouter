@@ -21,7 +21,7 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="20">
-                <TextBlock HorizontalAlignment="Center" Text="{Binding Greeting}" />
+                <TextBlock Text="{Binding Greeting}" TextAlignment="Center" />
                 <Button
                     HorizontalAlignment="Center"
                     Command="{Binding ResetToPage1Command}"
@@ -33,6 +33,11 @@
                 <TextBlock HorizontalAlignment="Center">
                     <Run Text="Stack size:" />
                     <Run FontWeight="DemiBold" Text="{Binding StackSize}" />
+                </TextBlock>
+                <TextBlock TextAlignment="Center">
+                    <Run Text="Current page:" />
+                    <LineBreak />
+                    <Run FontWeight="DemiBold" Text="{Binding CurrentRoute.RouteName}" />
                 </TextBlock>
             </StackPanel>
         </Border>
