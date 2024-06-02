@@ -28,7 +28,7 @@
             Grid.Column="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Command="{Binding NavigateToRogueCommand}"
-            Content="Go to Rogue" />
+            Command="{Binding NavigateToNestedCommand}"
+            Content="Go to Nested" />
     </Grid>
 </UserControl>

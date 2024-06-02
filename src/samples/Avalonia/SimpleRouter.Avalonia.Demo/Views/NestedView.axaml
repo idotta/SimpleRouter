@@ -1,20 +1,26 @@
 <UserControl
-    x:Class="SimpleRouter.Avalonia.Demo.Views.MainView"
+    x:Class="SimpleRouter.Avalonia.Demo.Views.NestedView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avarouter="clr-namespace:SimpleRouter.Avalonia;assembly=SimpleRouter.Avalonia"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:root="clr-namespace:SimpleRouter.Avalonia.Demo"
     xmlns:vm="clr-namespace:SimpleRouter.Avalonia.Demo.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:DataType="vm:MainViewModel"
+    x:DataType="vm:NestedViewModel"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <root:NestedViewLocator x:Key="viewLocator" />
+    </UserControl.Resources>
+
     <DockPanel>
         <Border
             Margin="4"
-            Background="LightBlue"
-            BorderBrush="DarkOliveGreen"
+            Background="LightGreen"
+            BorderBrush="LightCoral"
             BorderThickness="2"
             DockPanel.Dock="Left">
             <StackPanel
@@ -22,11 +28,11 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Spacing="20">
-                <TextBlock Text="MAIN ROUTER" TextAlignment="Center" />
+                <TextBlock Text="NESTED ROUTER" TextAlignment="Center" />
                 <Button
                     HorizontalAlignment="Center"
-                    Command="{Binding ResetToPage1Command}"
-                    Content="Reset to Page1" />
+                    Command="{Binding ResetToPage3Command}"
+                    Content="Reset to Page3" />
                 <Button
                     HorizontalAlignment="Center"
                     Command="{Binding NavigateBackCommand}"
@@ -45,17 +51,19 @@
 
         <Border
             Margin="4"
-            BorderBrush="DarkOliveGreen"
+            BorderBrush="LightCoral"
             BorderThickness="2">
-            <avarouter:RouteViewHost Router="{Binding MainRouter}">
+            <avarouter:RouteViewHost
+                x:Name="Host"
+                Router="{Binding Router, Mode=OneWay}"
+                ViewLocator="{StaticResource viewLocator}">
                 <avarouter:RouteViewHost.DefaultContent>
                     <TextBlock
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Text="No route" />
+                        Text="No nested route" />
                 </avarouter:RouteViewHost.DefaultContent>
             </avarouter:RouteViewHost>
         </Border>
-
     </DockPanel>
 </UserControl>

@@ -17,49 +17,25 @@ public class RouteViewHost : TransitioningContentControl
     public static readonly StyledProperty<object?> DefaultContentProperty =
         AvaloniaProperty.Register<RouteViewHost, object?>(nameof(DefaultContent));
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RoutedViewHost"/> class.
-    /// </summary>
-    public RouteViewHost()
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        RouterObserver routerObserver = new(this);
-        RouterProperty.Changed.Subscribe(routerObserver);
+        base.OnPropertyChanged(change);
+        switch (change.Property.Name)
+        {
+            case nameof(Router):
+                if (change.NewValue is not IRouter router)
+                {
+                    return;
+                }
+                router.OnRouteChanged += Router_OnRouteChanged;
+                NavigateToRoute(router.Current);
+                break;
+        }
     }
 
-    private sealed class RouterObserver : IObserver<AvaloniaPropertyChangedEventArgs<IRouter?>>
+    private void Router_OnRouteChanged(object? sender, RouteChangedEventArgs e)
     {
-        private readonly RouteViewHost _host;
-
-        public RouterObserver(RouteViewHost host)
-        {
-            _host = host ?? throw new ArgumentNullException(nameof(host));
-        }
-
-        public void OnCompleted()
-        {
-        }
-
-        public void OnError(Exception error)
-        {
-        }
-
-        public void OnNext(AvaloniaPropertyChangedEventArgs<IRouter?> value)
-        {
-            var (oldValue, newValue) = value.GetOldAndNewValue<IRouter?>();
-            if (oldValue != null)
-            {
-                oldValue.OnRouteChanged -= NewValue_OnRouteChanged;
-            }
-            if (newValue != null)
-            {
-                newValue.OnRouteChanged += NewValue_OnRouteChanged;
-            }
-        }
-
-        private void NewValue_OnRouteChanged(object? sender, RouteChangedEventArgs e)
-        {
-            _host.NavigateToRoute(e.Next);
-        }
+        NavigateToRoute(e.Next);
     }
 
     /// <summary>
@@ -99,27 +75,23 @@ public class RouteViewHost : TransitioningContentControl
             Content = DefaultContent;
             return;
         }
-
         if (route == null)
         {
             System.Diagnostics.Debug.WriteLine("Route is null. Falling back to default content.");
             Content = DefaultContent;
             return;
         }
-
         if (ViewLocator == null)
         {
             Content = route;
             return;
         }
-
         var view = ViewLocator.Build(route);
         if (view == null)
         {
             Content = DefaultContent;
             return;
         }
-        
         view.DataContext = route;
         Content = view;
     }
