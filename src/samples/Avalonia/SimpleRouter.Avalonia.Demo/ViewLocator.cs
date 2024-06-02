@@ -1,38 +1,51 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Controls.Templates;
+using Avalonia.Layout;
+using Avalonia.Media;
 using SimpleRouter.Avalonia.Demo.ViewModels;
 using SimpleRouter.Avalonia.Demo.Views;
 using System;
 
 namespace SimpleRouter.Avalonia.Demo;
 
-public class ViewLocator : IDataTemplate
+public class ViewLocator : ViewLocatorBase
 {
-    public Control? Build(object? data)
-    {
-        ArgumentNullException.ThrowIfNull(data);
-        return data switch
-        {
-            Page1ViewModel p1 => new Page1View { DataContext = p1 },
-            Page2ViewModel p2 => new Page2View { DataContext = p2 },
-            RogueViewModel r => new RogueView { DataContext = r },
-            _ => TryDeduceControl(data),
-        };
-    }
-
-    public bool Match(object? data)
+    public override bool Match(object? data)
     {
         return data is ViewModelBase;
     }
 
-    private static Control? TryDeduceControl(object data)
+    protected override Control? ResolveControl(IRoute? route)
     {
-        var name = data.GetType().FullName?.Replace("ViewModel", "View") ?? "";
-        var type = Type.GetType(name);
-        if (type != null)
+        ArgumentNullException.ThrowIfNull(route);
+        return route switch
         {
-            return Activator.CreateInstance(type) as Control;
-        }
-        return null;
+            Page1ViewModel p1 => new Page1View { DataContext = p1 },
+            Page2ViewModel p2 => new Page2View { DataContext = p2 },
+            NestedViewModel r => new NestedView { DataContext = r },
+            _ => DefaultContent
+        };
+    }
+}
+
+public class NestedViewLocator : ViewLocatorBase
+{
+    public NestedViewLocator()
+    {
+        DefaultContent = new TextBlock { Text = "Nested default content", TextAlignment = TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center  };
+    }
+
+    public override bool Match(object? data)
+    {
+        return data is ViewModelBase;
+    }
+
+    protected override Control? ResolveControl(IRoute? route)
+    {
+        ArgumentNullException.ThrowIfNull(route);
+        return route switch
+        {
+            Page3ViewModel p3 => new Page3View { DataContext = p3 },
+            _ => DefaultContent
+        };
     }
 }

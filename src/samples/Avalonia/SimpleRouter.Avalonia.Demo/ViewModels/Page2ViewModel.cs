@@ -18,5 +18,5 @@ public partial class Page2ViewModel : ViewModelBase, IRoute
     private void NavigateToPage1() => RouterHost.Router.NavigateTo(typeof(Page1ViewModel), RouterHost);
 
     [RelayCommand]
-    private void NavigateToRogue() => RouterHost.Router.NavigateTo(new RogueViewModel(RouterHost, 0));
+    private void NavigateToNested() => RouterHost.Router.NavigateTo(new NestedViewModel(RouterHost));
 }

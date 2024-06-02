@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="SimpleRouter.Avalonia.Demo.Views.RogueView"
+    x:Class="SimpleRouter.Avalonia.Demo.Views.Page3View"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,30 +7,31 @@
     xmlns:vm="clr-namespace:SimpleRouter.Avalonia.Demo.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    x:DataType="vm:RogueViewModel"
+    x:DataType="vm:Page3ViewModel"
     mc:Ignorable="d">
     <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
         <TextBlock
             Grid.ColumnSpan="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
-            <Run Text="This is Rogue" />
+            <Run Text="This is Page3 [" />
             <Run FontWeight="DemiBold" Text="{Binding Number}" />
+            <Run Text="]" />
         </TextBlock>
 
         <Button
             Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Command="{Binding NavigateToRogue1Command}"
-            Content="Go to Rogue" />
+            Command="{Binding NavigateToPage3GenericCommand}"
+            Content="Go to Page3" />
 
         <Button
             Grid.Row="1"
             Grid.Column="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Command="{Binding NavigateToRogue2Command}"
-            Content="Go to Rogue" />
+            Command="{Binding NavigateToPage3TypeCommand}"
+            Content="Go to Page3" />
     </Grid>
 </UserControl>

@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace SimpleRouter.Avalonia.Demo.Views
 {
-    public partial class RogueView : UserControl
+    public partial class Page3View : UserControl
     {
-        public RogueView()
+        public Page3View()
         {
             InitializeComponent();
         }

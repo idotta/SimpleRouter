@@ -22,6 +22,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SimpleRouter\SimpleRouter.csproj" />
+    <ProjectReference Include="..\..\..\SimpleRouter.Avalonia\SimpleRouter.Avalonia.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\NestedView.axaml.cs">
+      <DependentUpon>NestedView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Page3View.axaml.cs">
+      <DependentUpon>Page3View.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
