@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		
 		<PackageId>IDotta.SimpleRouter.Avalonia</PackageId>
-		<Version>1.0.2</Version>
+		<Version>1.0.2.1</Version>
 		<Title>SimpleRouter.Avalonia</Title>
 		<Product>SimpleRouter.Avalonia</Product>
 		<Authors>Iúri Dotta</Authors>
@@ -18,11 +18,15 @@
 		<RepositoryUrl>https://github.com/idotta/SimpleRouter</RepositoryUrl>
 		<Copyright>MIT</Copyright>
 		<Company>Dotta IT Solutions</Company>
-		<!--<PackageIcon></PackageIcon>-->
+		<PackageIcon>logo.png</PackageIcon>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="..\..\images\logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 		<None Include="..\..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
