@@ -14,7 +14,7 @@ public class ViewLocator : ViewLocatorBase
         return data is ViewModelBase;
     }
 
-    protected override Control? ResolveControl(IRoute? route)
+    public override Control? ResolveControl(IRoute? route)
     {
         ArgumentNullException.ThrowIfNull(route);
         return route switch
@@ -39,7 +39,7 @@ public class NestedViewLocator : ViewLocatorBase
         return data is ViewModelBase;
     }
 
-    protected override Control? ResolveControl(IRoute? route)
+    public override Control? ResolveControl(IRoute? route)
     {
         ArgumentNullException.ThrowIfNull(route);
         return route switch
