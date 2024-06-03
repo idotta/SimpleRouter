@@ -1,5 +1,7 @@
 # SimpleRouter
 
+![.NET Tests](https://github.com/idotta/SimpleRouter/actions/workflows/dotnet-test.yml/badge.svg)
+
 SimpleRouter is a lightweight, routing library for .NET applications. It was inspired by [ReactiveUI](https://github.com/reactiveui/ReactiveUI) routing and provides a simple and intuitive API for managing navigation within your application.
 
 ## Features
