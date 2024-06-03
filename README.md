@@ -15,11 +15,60 @@ To use SimpleRouter in your project, you'll need to create classes that implemen
 
 It works pretty well with MVVM Community Toolkit, but the design is framework agnostic.
 
-Examples can be found in the Demo projects.
+Examples can be found in the samples directory.
+
+More advanced features are available in the SimpleRouter.Avalonia extension, which provides additional features for managing views in your Avalonia application. These can be replicated in a WPF application, for example.
 
 ## Installation
 
 You can install SimpleRouter via [NuGet Package](https://www.nuget.org/packages/IDotta.SimpleRouter/).
+
+## SimpleRouter.Avalonia
+
+SimpleRouter.Avalonia is an extension of SimpleRouter for Avalonia applications. It provides additional features for managing views in your Avalonia application.
+
+### Features
+
+- **RouteViewHost**: A `TransitioningContentControl` that hosts the current route's view. It listens to route changes in the `Router` and updates the displayed content accordingly. It also supports a `DefaultContent` property that is displayed when there is no current route.
+
+- **ViewLocatorBase**: An abstract base class for view locators that implement the `IDataTemplate` interface. It provides methods for building and matching controls based on routes. It also supports a `DefaultContent` property that is used when no specific control is resolved.
+
+### Usage
+
+To use SimpleRouter.Avalonia in your project, you'll need to create a class that extends `ViewLocatorBase` and implement the `ResolveControl` method. This method should return the appropriate control for each route in your application.
+
+You'll also need to add a `RouteViewHost` to your Avalonia UI and bind its `Router` property to your `Router` instance. The `RouteViewHost` will automatically update its content to match the current route.
+
+You must create at least one ViewLocator for your application. The ViewLocator is responsible for resolving views based on routes. You can register it as a DataTemplate in App.axaml, like:
+
+```xml
+<Application.DataTemplates>
+    <local:ViewLocator />
+</Application.DataTemplates>
+```
+
+You can also create different ViewLocators for different parts of your application. For example, you might have a ViewLocator for your main content and another for nested components, injecting the second directly to the RouteViewHost.
+
+Here's an example of how you might set up a `RouteViewHost` in your Avalonia UI:
+
+```
+xmlns:simplerouter="clr-namespace:SimpleRouter.Avalonia;assembly=SimpleRouter.Avalonia"
+
+...
+
+<UserControl.Resources>
+    <root:ViewLocator x:Key="viewLocator" />
+</UserControl.Resources>
+
+...
+
+<simplerouter:RouteViewHost Router="{Binding Router}" ViewLocator="{StaticResource viewLocator}" />
+```
+In this example, `Router` is a property in your view model and `ViewLocator` is declared in your xaml file. This control can be nested inside another RouteViewHost, allowing you to create complex navigation structures.
+
+### Installation
+
+You can install SimpleRouter.Avalonia via [NuGet Package](https://www.nuget.org/packages/IDotta.SimpleRouter.Avalonia/).
 
 ## Running the Tests
 
