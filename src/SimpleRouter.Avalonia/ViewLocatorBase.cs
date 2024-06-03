@@ -57,7 +57,7 @@ public abstract class ViewLocatorBase : IDataTemplate
     /// </summary>
     /// <param name="route">The route used to resolve the control.</param>
     /// <returns>The resolved control.</returns>
-    protected abstract Control? ResolveControl(IRoute? route);
+    public abstract Control? ResolveControl(IRoute? route);
 
     /// <summary>
     /// Tries to deduce the control based on the provided data by using reflection.
