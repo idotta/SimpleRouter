@@ -1,17 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		
+		<PackageId>IDotta.SimpleRouter.Avalonia</PackageId>
+		<Version>1.0.2</Version>
+		<Title>SimpleRouter.Avalonia</Title>
+		<Product>SimpleRouter.Avalonia</Product>
+		<Authors>Iúri Dotta</Authors>
+		<Description>Contains the IDotta.SimpleRouter platform specific extensions for AvaloniaUI.</Description>
+		<PackageDescription>Contains the IDotta.SimpleRouter platform specific extensions for AvaloniaUI.</PackageDescription>
+		<PackageProjectUrl>https://github.com/idotta/SimpleRouter</PackageProjectUrl>
+		<PackageTags>router;navigation;navigator;mvvm;avalonia;csharp</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/idotta/SimpleRouter</RepositoryUrl>
+		<Copyright>MIT</Copyright>
+		<Company>Dotta IT Solutions</Company>
+		<!--<PackageIcon></PackageIcon>-->
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.10" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SimpleRouter\SimpleRouter.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SimpleRouter\SimpleRouter.csproj" />
+	</ItemGroup>
 
 </Project>

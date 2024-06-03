@@ -7,11 +7,12 @@
 		<LangVersion>latest</LangVersion>
 
 		<PackageId>IDotta.SimpleRouter</PackageId>
-		<Version>1.0.0.1</Version>
+		<Version>1.0.2</Version>
 		<Title>SimpleRouter</Title>
 		<Product>SimpleRouter</Product>
 		<Authors>Iúri Dotta</Authors>
 		<Description>A .NET library for simple route control</Description>
+		<PackageDescription>A .NET library for simple route control</PackageDescription>
 		<PackageProjectUrl>https://github.com/idotta/SimpleRouter</PackageProjectUrl>
 		<PackageTags>router;navigation;navigator;mvvm;avalonia;wpf;csharp</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
