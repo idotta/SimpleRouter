@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		
 		<PackageId>IDotta.SimpleRouter.Avalonia</PackageId>
-		<Version>1.0.2.1</Version>
+		<Version>1.0.3.0</Version>
 		<Title>SimpleRouter.Avalonia</Title>
 		<Product>SimpleRouter.Avalonia</Product>
 		<Authors>Iúri Dotta</Authors>

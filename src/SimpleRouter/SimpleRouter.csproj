@@ -7,7 +7,7 @@
 		<LangVersion>latest</LangVersion>
 
 		<PackageId>IDotta.SimpleRouter</PackageId>
-		<Version>1.0.2.1</Version>
+		<Version>1.0.3.0</Version>
 		<Title>SimpleRouter</Title>
 		<Product>SimpleRouter</Product>
 		<Authors>Iúri Dotta</Authors>
