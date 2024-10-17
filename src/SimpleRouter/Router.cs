@@ -1,32 +1,22 @@
-﻿namespace SimpleRouter;
+﻿using System.Net.Sockets;
 
-public sealed class Router(RouteFactory createRoute) : IRouter
+namespace SimpleRouter;
+
+public sealed class Router : IRouter
 {
-    private const int s_stackLimit = 50;
-    private IRoute? _current;
+    private readonly RouteFactory _createRoute;
+    private readonly int _stackLimit = 50;
     private readonly List<IRoute> _stack = [];
-    private readonly RouteFactory _createRoute = createRoute ?? throw new ArgumentNullException(nameof(createRoute));
+    private IRoute? _current;
+
+    public Router(RouteFactory createRoute, int stackLimit = 50)
+    {
+        _createRoute = createRoute ?? throw new ArgumentNullException(nameof(createRoute));
+    }
 
     public IReadOnlyList<IRoute> Stack => _stack;
 
-    public IRoute? Current
-    {
-        get => _current;
-        private set
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-            if (value != _current)
-            {
-                OnRouteChanging?.Invoke(this, new RouteChangingEventArgs(_current, value));
-                _current = value;
-                AddToStack(_current);
-                OnRouteChanged?.Invoke(this, new RouteChangedEventArgs(_current));
-            }
-        }
-    }
+    public IRoute? Current => _current;
 
     public event EventHandler<RouteChangingEventArgs>? OnRouteChanging;
 
@@ -49,78 +39,97 @@ public sealed class Router(RouteFactory createRoute) : IRouter
     public IRoute NavigateTo<T>() where T : IRoute
     {
         var destination = _createRoute(typeof(T)) ?? throw new InvalidOperationException("Failed to create view model");
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public IRoute NavigateTo<T>(params object[] parameters) where T : IRoute
     {
         var destination = _createRoute(typeof(T), parameters) ?? throw new InvalidOperationException("Failed to create view model");
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public IRoute NavigateTo(Type type)
     {
         var destination = _createRoute(type) ?? throw new InvalidOperationException("Failed to create view model");
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public IRoute NavigateTo(Type type, params object[] parameters)
     {
         var destination = _createRoute(type, parameters) ?? throw new InvalidOperationException("Failed to create view model");
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public void NavigateTo(IRoute destination)
     {
-        Current = destination ?? throw new ArgumentNullException(nameof(destination));
+        if (destination is null)
+        {
+            throw new ArgumentNullException(nameof(destination));
+        }
+        SetCurrent(destination);
     }
 
     public IRoute NavigateToAndReset<T>() where T : IRoute
     {
         var destination = _createRoute(typeof(T)) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public IRoute NavigateToAndReset<T>(params object[] parameters) where T : IRoute
     {
         var destination = _createRoute(typeof(T), parameters) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public IRoute NavigateToAndReset(Type type)
     {
         var destination = _createRoute(type) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public IRoute NavigateToAndReset(Type type, params object[] parameters)
     {
         var destination = _createRoute(type, parameters) ?? throw new InvalidOperationException("Failed to create view model");
         _stack.Clear();
-        Current = destination;
-        return Current;
+        SetCurrent(destination);
+        return destination;
     }
 
     public void NavigateToAndReset(IRoute destination)
     {
         _stack.Clear();
-        Current = destination;
+        SetCurrent(destination);
+    }
+
+    private void SetCurrent(IRoute destination)
+    {
+        if (destination == null)
+        {
+            throw new ArgumentNullException(nameof(destination));
+        }
+        if (destination != _current)
+        {
+            OnRouteChanging?.Invoke(this, new RouteChangingEventArgs(_current, destination));
+            _current = destination;
+            AddToStack(_current);
+            OnRouteChanged?.Invoke(this, new RouteChangedEventArgs(_current));
+        }
     }
 
     private void AddToStack(IRoute destination)
     {
         _stack.Add(destination);
-        if (_stack.Count > s_stackLimit)
+        if (_stack.Count > _stackLimit)
         {
             _stack.RemoveAt(0);
         }

@@ -69,23 +69,28 @@ public class RouteViewHost : TransitioningContentControl
     /// <param name="route">Route to which the user navigates.</param>
     private void NavigateToRoute(IRoute? route)
     {
+        // Apply null to guarantee that the current content is unloaded before the new content is loaded
+        Content = null;
+        // If Router property is null, fall back to default content
         if (Router == null)
         {
-            System.Diagnostics.Debug.WriteLine("Router property is null. Falling back to default content.");
+            
             Content = DefaultContent;
             return;
         }
+        // If the route is null, fall back to default content
         if (route == null)
         {
-            System.Diagnostics.Debug.WriteLine("Route is null. Falling back to default content.");
             Content = DefaultContent;
             return;
         }
+        // If the view locator is null, assume the route is resolvable by the ContentControl
         if (ViewLocator == null)
         {
             Content = route;
             return;
         }
+        // Resolve and apply the route
         var view = ViewLocator.Build(route);
         if (view == null)
         {
