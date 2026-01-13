@@ -364,14 +364,139 @@ public enum RouteCachingStrategy
 }
 ```
 
+#### 11. Source Generators for Performance
+**Description:** No compile-time code generation for route registration and factory optimization.
+
+**Current Problem:**
+- `RouteFactory` delegate relies on reflection or manual factory implementations
+- `ViewLocatorBase.TryDeduceControl()` uses reflection (`Type.GetType`, `Activator.CreateInstance`)
+- Route creation has runtime overhead from reflection
+- No compile-time validation of route configurations
+
+**Use Cases:**
+- Auto-generate optimized route factory implementations at compile time
+- Eliminate reflection overhead in route and view creation
+- Generate strongly-typed navigation extension methods
+- Create compile-time route validation and diagnostics
+- Reduce startup time and memory allocations
+- Improve AOT (Ahead-of-Time) compilation compatibility
+
+**Benefits:**
+- **Zero runtime reflection** - All route types known at compile time
+- **Type safety** - Compile-time errors for invalid routes or missing views
+- **Performance** - 10-100x faster route creation (no `Activator.CreateInstance`)
+- **AOT-friendly** - Works with Native AOT compilation
+- **Intellisense support** - Better IDE experience with generated code
+- **Startup time** - Faster application initialization
+
+**Real-World Example:**
+Similar to [StaticViewLocator](https://github.com/wieslawsoltes/StaticViewLocator) by Wiesław Sołtes, which generates static view resolution code for Avalonia, eliminating reflection from view locators.
+
+**Proposed API:**
+
+```csharp
+// 1. Mark router for generation
+[GeneratedRouter]
+public partial class AppRouter : IRouter
+{
+    // Source generator will implement the factory
+}
+
+// 2. Mark routes for registration
+[Route]
+public class HomeRoute : IRoute
+{
+    public HomeRoute(IRouterHost host) { ... }
+}
+
+[Route]
+public class UserProfileRoute : IRoute
+{
+    public UserProfileRoute(IRouterHost host, string userId, int? tab = null) { ... }
+}
+
+// 3. Auto-generated code (example output)
+public partial class AppRouter
+{
+    // Generated static factory dictionary
+    private static readonly Dictionary<Type, Func<IRouterHost, object[], IRoute>> s_routeFactories = new()
+    {
+        [typeof(HomeRoute)] = (host, args) => new HomeRoute(host),
+        [typeof(UserProfileRoute)] = (host, args) => new UserProfileRoute(
+            host, 
+            (string)args[0], 
+            args.Length > 1 ? (int?)args[1] : null),
+    };
+    
+    // Generated strongly-typed navigation extensions
+    public static class Extensions
+    {
+        public static HomeRoute NavigateToHome(this IRouter router)
+            => (HomeRoute)router.NavigateTo<HomeRoute>();
+            
+        public static UserProfileRoute NavigateToUserProfile(
+            this IRouter router, 
+            string userId, 
+            int? tab = null)
+            => (UserProfileRoute)router.NavigateTo<UserProfileRoute>(userId, tab);
+    }
+}
+
+// 4. Usage in application
+router.NavigateToUserProfile("user123", tab: 2); // Strongly-typed, no reflection!
+```
+
+**Generated ViewLocator Enhancement:**
+
+```csharp
+// Mark view locator for generation
+[GeneratedViewLocator]
+public partial class AppViewLocator : ViewLocatorBase
+{
+    // Generated view resolution (similar to StaticViewLocator)
+    private static readonly Dictionary<Type, Func<Control>> s_views = new()
+    {
+        [typeof(HomeRoute)] = () => new HomeView(),
+        [typeof(UserProfileRoute)] = () => new UserProfileView(),
+    };
+    
+    public override Control? ResolveControl(IRoute? route)
+    {
+        if (route is null) return null;
+        
+        var type = route.GetType();
+        return s_views.TryGetValue(type, out var factory) 
+            ? factory() 
+            : null;
+    }
+}
+```
+
+**Implementation Notes:**
+- Use Roslyn IIncrementalSourceGenerator (C# 9.0+)
+- Generate partial classes and extension methods
+- Support incremental generation for fast builds
+- Provide diagnostics for missing routes/views
+- Convention-based: `*Route` → `*View` mapping
+- Generate XML documentation for generated methods
+- Support for nullable reference types
+- Compatible with Native AOT compilation
+
+**Performance Impact:**
+- Route creation: ~100x faster (static instantiation vs reflection)
+- View resolution: ~10-50x faster (dictionary lookup vs Type.GetType)
+- Memory: Lower allocation (no runtime type resolution)
+- Startup: Faster (no reflection scanning)
+- AOT: Full support (no reflection metadata needed)
+
 ### 🟢 Priority: LOW
 
-#### 11. Route Transitions/Animations
+#### 12. Route Transitions/Animations
 **Description:** Basic content switching, no transition control.
 
 **Note:** Avalonia's `TransitioningContentControl` provides some support, but no programmatic control.
 
-#### 12. Modal/Dialog Route Support
+#### 13. Modal/Dialog Route Support
 **Description:** No concept of modal vs. page routes.
 
 **Use Cases:**
@@ -379,7 +504,7 @@ public enum RouteCachingStrategy
 - Block navigation while modal is active
 - Return values from modal routes
 
-#### 13. Nested Routers
+#### 14. Nested Routers
 **Description:** No explicit support for nested routing hierarchies.
 
 **Use Cases:**
@@ -387,7 +512,7 @@ public enum RouteCachingStrategy
 - Tab-based navigation
 - Multi-pane applications
 
-#### 14. Route Templates/Conventions
+#### 15. Route Templates/Conventions
 **Description:** No way to define route naming conventions or patterns.
 
 ---
@@ -707,6 +832,13 @@ public enum RouteCachingStrategy
   - [ ] Implement route cache
   - [ ] Add cache tests
 
+- [ ] **Implement source generators for performance**
+  - [ ] Create source generator project
+  - [ ] Generate route factory implementations
+  - [ ] Generate strongly-typed navigation extensions
+  - [ ] Add compile-time route validation
+  - [ ] Add generator tests and documentation
+
 ### Phase 6: Infrastructure & DevOps
 
 - [ ] **Set up release automation**
@@ -772,17 +904,18 @@ public enum RouteCachingStrategy
 14. Route lifecycle hooks
 15. Logging support
 16. Route caching
-17. Integration tests
-18. Performance tests
-19. Release automation
-20. Advanced examples
+17. Source generators for performance
+18. Integration tests
+19. Performance tests
+20. Release automation
+21. Advanced examples
 
 ### Future Considerations
-21. Modal/dialog routes
-22. Nested routers
-23. Route templates
-24. Animation control
-25. Benchmarking suite
+22. Modal/dialog routes
+23. Nested routers
+24. Route templates
+25. Animation control
+26. Benchmarking suite
 
 ---
 
