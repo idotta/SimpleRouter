@@ -1,0 +1,57 @@
+# [CRITICAL] Fix memory leak in RouteViewHost - Event handler not unsubscribed
+
+## Priority: CRITICAL 🔴
+
+## Location
+`SimpleRouter.Avalonia/RouteViewHost.cs:30`
+
+## Issue Description
+Event handler is subscribed to the router's `OnRouteChanged` event but never unsubscribed when the Router changes or the control is disposed. This causes a memory leak in applications with dynamic router changes.
+
+**Current Code:**
+```csharp
+router.OnRouteChanged += Router_OnRouteChanged;
+```
+
+## Impact
+- Memory leaks in applications with dynamic router changes
+- Event handlers remain in memory even after the control is disposed
+- Can lead to increased memory consumption over time
+
+## Fix Required
+
+```csharp
+protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+{
+    base.OnPropertyChanged(change);
+    switch (change.Property.Name)
+    {
+        case nameof(Router):
+            // Unsubscribe from old router
+            if (change.OldValue is IRouter oldRouter)
+            {
+                oldRouter.OnRouteChanged -= Router_OnRouteChanged;
+            }
+            
+            // Subscribe to new router
+            if (change.NewValue is IRouter newRouter)
+            {
+                newRouter.OnRouteChanged += Router_OnRouteChanged;
+                NavigateToRoute(newRouter.Current);
+            }
+            break;
+    }
+}
+```
+
+## Tasks
+- [ ] Implement unsubscription logic for old router events
+- [ ] Add proper disposal pattern
+- [ ] Add unit test to verify event handler cleanup
+- [ ] Add memory leak test
+
+## Phase
+**Phase 1: Critical Fixes** (Required for Production)
+
+## References
+- Production Readiness Analysis: Line 95-129
