@@ -320,4 +320,66 @@ public class RouterTests
         Assert.Equal(mockRoute, router.Current);
         Assert.Single(router.Stack);
     }
+
+    [Fact]
+    public void TestStackLimit_CustomValue_ShouldBeRespected()
+    {
+        // Arrange
+        var routeFactoryMock = new Mock<RouteFactory>();
+        var router = new Router(routeFactoryMock.Object, stackLimit: 3);
+
+        // Act — navigate to 5 distinct routes
+        for (var i = 0; i < 5; i++)
+        {
+            router.NavigateTo(new MockRoute(new Mock<IRouterHost>().Object));
+        }
+
+        // Assert — stack should be trimmed to 3
+        Assert.Equal(3, router.Stack.Count);
+    }
+
+    [Fact]
+    public void TestNavigateBack_WithOneItem_ShouldClearCurrentToNull()
+    {
+        // Arrange
+        var routeFactoryMock = new Mock<RouteFactory>();
+        var router = new Router(routeFactoryMock.Object);
+        router.NavigateTo(new MockRoute(new Mock<IRouterHost>().Object));
+
+        // Act
+        var result = router.NavigateBack();
+
+        // Assert
+        Assert.Null(result);
+        Assert.Null(router.Current);
+        Assert.Empty(router.Stack);
+    }
+
+    [Fact]
+    public void TestNavigateToAndReset_WithNullRoute_ShouldThrowBeforeClearingStack()
+    {
+        // Arrange
+        var routeFactoryMock = new Mock<RouteFactory>();
+        var router = new Router(routeFactoryMock.Object);
+        var existingRoute = new MockRoute(new Mock<IRouterHost>().Object);
+        router.NavigateTo(existingRoute);
+
+        // Act & Assert — null should throw before stack is cleared
+        Assert.Throws<ArgumentNullException>(() => router.NavigateToAndReset((IRoute)null!));
+
+        // Stack should still contain the original route
+        Assert.Single(router.Stack);
+        Assert.Equal(existingRoute, router.Current);
+    }
+
+    [Fact]
+    public void TestConstructor_WithInvalidStackLimit_ShouldThrow()
+    {
+        // Arrange
+        var routeFactoryMock = new Mock<RouteFactory>();
+
+        // Act & Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Router(routeFactoryMock.Object, stackLimit: 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Router(routeFactoryMock.Object, stackLimit: -1));
+    }
 }

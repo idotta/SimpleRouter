@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>14</LangVersion>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<IsAotCompatible>true</IsAotCompatible>
 
 		<PackageId>IDotta.SimpleRouter</PackageId>
-		<Version>1.0.3.0</Version>
+		<Version>2.0.0.0</Version>
 		<Title>SimpleRouter</Title>
 		<Product>SimpleRouter</Product>
 		<Authors>Iúri Dotta</Authors>

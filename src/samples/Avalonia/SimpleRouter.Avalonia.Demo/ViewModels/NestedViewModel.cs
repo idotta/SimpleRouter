@@ -1,28 +1,21 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 
 namespace SimpleRouter.Avalonia.Demo.ViewModels;
 
+[Route(Group = "Main")]
+[GeneratedRouteFactory(Group = "Nested")]
 public partial class NestedViewModel : ViewModelBase, IRoute, IRouterHost
 {
     public NestedViewModel(IRouterHost routerHost)
     {
         RouterHost = routerHost ?? throw new ArgumentNullException(nameof(routerHost));
-        Router = new Router(new RouteFactory(CreateRoutes));
+        Router = new Router(CreateGeneratedRouteFactory());
         Router.OnRouteChanged += (sender, e) =>
         {
             CurrentRoute = e.Next;
             StackSize = Router.Stack.Count;
-        };
-    }
-
-    private IRoute? CreateRoutes(Type routeType, object[] parameters)
-    {
-        return routeType.Name switch
-        {
-            nameof(Page3ViewModel) => new Page3ViewModel((NestedViewModel)parameters[0], (int)parameters[1]),
-            _ => null,
         };
     }
 

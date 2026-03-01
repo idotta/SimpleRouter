@@ -1,17 +1,18 @@
-﻿using System.Net.Sockets;
-
 namespace SimpleRouter;
 
 public sealed class Router : IRouter
 {
     private readonly RouteFactory _createRoute;
-    private readonly int _stackLimit = 50;
+    private readonly int _stackLimit;
     private readonly List<IRoute> _stack = [];
     private IRoute? _current;
 
     public Router(RouteFactory createRoute, int stackLimit = 50)
     {
-        _createRoute = createRoute ?? throw new ArgumentNullException(nameof(createRoute));
+        ArgumentNullException.ThrowIfNull(createRoute);
+        ArgumentOutOfRangeException.ThrowIfLessThan(stackLimit, 1);
+        _createRoute = createRoute;
+        _stackLimit = stackLimit;
     }
 
     public IReadOnlyList<IRoute> Stack => _stack;
@@ -27,6 +28,7 @@ public sealed class Router : IRouter
         if (_stack.Count <= 1)
         {
             _stack.Clear();
+            _current = null;
             return null;
         }
         _stack.RemoveAt(_stack.Count - 1);
@@ -66,10 +68,7 @@ public sealed class Router : IRouter
 
     public void NavigateTo(IRoute destination)
     {
-        if (destination is null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
         SetCurrent(destination);
     }
 
@@ -107,16 +106,13 @@ public sealed class Router : IRouter
 
     public void NavigateToAndReset(IRoute destination)
     {
+        ArgumentNullException.ThrowIfNull(destination);
         _stack.Clear();
         SetCurrent(destination);
     }
 
     private void SetCurrent(IRoute destination)
     {
-        if (destination == null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
         if (destination != _current)
         {
             OnRouteChanging?.Invoke(this, new RouteChangingEventArgs(_current, destination));

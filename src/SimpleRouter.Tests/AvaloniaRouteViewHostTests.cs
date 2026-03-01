@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Moq;
 using SimpleRouter.Avalonia;
 
@@ -14,7 +14,7 @@ public class AvaloniaRouteViewHostTests
         var defaultContent = new object();
         routeViewHost.DefaultContent = defaultContent;
         var router = new Mock<IRouter>();
-        router.Setup(r => r.Current).Returns<IRoute?>(null);
+        router.Setup(r => r.Current).Returns((IRoute?)null);
 
         // Act
         routeViewHost.Router = router.Object;
@@ -50,7 +50,7 @@ public class AvaloniaRouteViewHostTests
         var router = new Mock<IRouter>();
         router.Setup(r => r.Current).Returns(route);
         routeViewHost.ViewLocator = viewLocator.Object;
-        viewLocator.Setup(v => v.Build(route)).Returns<Control?>(null);
+        viewLocator.Setup(v => v.Build(route)).Returns((Control?)null);
         routeViewHost.DefaultContent = defaultContent;
 
         // Act
@@ -79,5 +79,42 @@ public class AvaloniaRouteViewHostTests
         // Assert
         Assert.Equal(view, routeViewHost.Content);
         Assert.Equal(route, view.DataContext);
+    }
+
+    [Fact]
+    public void RouterChange_ShouldUnsubscribeOldRouter()
+    {
+        // Arrange
+        var routeViewHost = new RouteViewHost();
+        var oldRouter = new Mock<IRouter>();
+        oldRouter.Setup(r => r.Current).Returns((IRoute?)null);
+        var newRouter = new Mock<IRouter>();
+        newRouter.Setup(r => r.Current).Returns((IRoute?)null);
+
+        // Act — set first router, then replace
+        routeViewHost.Router = oldRouter.Object;
+        routeViewHost.Router = newRouter.Object;
+
+        // Assert — old router should have had OnRouteChanged unsubscribed
+        // Verify by raising the event on old router — content should not change
+        oldRouter.Raise(r => r.OnRouteChanged += null!, oldRouter.Object, new RouteChangedEventArgs(new Mock<IRoute>().Object));
+        // Content should still be default (from new router's null Current)
+        Assert.Null(routeViewHost.Content);
+    }
+
+    [Fact]
+    public void RouterChange_ToNull_ShouldUnsubscribeOldRouter()
+    {
+        // Arrange
+        var routeViewHost = new RouteViewHost();
+        var router = new Mock<IRouter>();
+        router.Setup(r => r.Current).Returns((IRoute?)null);
+
+        // Act
+        routeViewHost.Router = router.Object;
+        routeViewHost.Router = null;
+
+        // Assert — raising event on old router should not throw or affect anything
+        router.Raise(r => r.OnRouteChanged += null!, router.Object, new RouteChangedEventArgs(new Mock<IRoute>().Object));
     }
 }

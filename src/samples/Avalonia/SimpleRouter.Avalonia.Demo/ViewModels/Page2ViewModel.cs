@@ -1,8 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System;
 
 namespace SimpleRouter.Avalonia.Demo.ViewModels;
 
+[Route(Group = "Main")]
 public partial class Page2ViewModel : ViewModelBase, IRoute
 {
     public Page2ViewModel(IRouterHost routerHost)

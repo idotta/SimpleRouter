@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+using System.Diagnostics.CodeAnalysis;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
 namespace SimpleRouter.Avalonia;
@@ -21,17 +22,17 @@ public abstract class ViewLocatorBase : IDataTemplate
     /// <returns>The built control.</returns>
     public virtual Control? Build(object? param)
     {
-        if (param == null)
+        if (param is null)
         {
             return DefaultContent;
         }
         var control = ResolveControl(param as IRoute);
-        if (control != null)
+        if (control is not null)
         {
             return control;
         }
         control = TryDeduceControl(param);
-        if (control != null)
+        if (control is not null)
         {
             return control;
         }
@@ -64,11 +65,13 @@ public abstract class ViewLocatorBase : IDataTemplate
     /// </summary>
     /// <param name="data">The data used to deduce the control.</param>
     /// <returns>The deduced control.</returns>
+    [RequiresUnreferencedCode("TryDeduceControl uses reflection to locate view types by convention. Use ResolveControl for AOT compatibility.")]
+    [RequiresDynamicCode("TryDeduceControl uses Activator.CreateInstance which requires dynamic code generation. Use ResolveControl for AOT compatibility.")]
     private static Control? TryDeduceControl(object data)
     {
         var name = data.GetType().FullName?.Replace("ViewModel", "View") ?? "";
         var type = Type.GetType(name);
-        if (type != null)
+        if (type is not null)
         {
             return Activator.CreateInstance(type) as Control;
         }

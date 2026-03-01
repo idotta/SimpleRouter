@@ -1,8 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System;
 
 namespace SimpleRouter.Avalonia.Demo.ViewModels;
 
+[Route(Group = "Nested")]
 public partial class Page3ViewModel : ViewModelBase, IRoute
 {
     public Page3ViewModel(IRouterHost routerHost, int number)

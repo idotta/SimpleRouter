@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Avalonia.Controls;
 
 namespace SimpleRouter.Avalonia;
@@ -20,17 +20,24 @@ public class RouteViewHost : TransitioningContentControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        switch (change.Property.Name)
+        if (change.Property == RouterProperty)
         {
-            case nameof(Router):
-                if (change.NewValue is not IRouter router)
-                {
-                    return;
-                }
-                router.OnRouteChanged += Router_OnRouteChanged;
-                NavigateToRoute(router.Current);
-                break;
+            if (change.OldValue is IRouter oldRouter)
+                oldRouter.OnRouteChanged -= Router_OnRouteChanged;
+
+            if (change.NewValue is IRouter newRouter)
+            {
+                newRouter.OnRouteChanged += Router_OnRouteChanged;
+                NavigateToRoute(newRouter.Current);
+            }
         }
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        if (Router is { } router)
+            router.OnRouteChanged -= Router_OnRouteChanged;
+        base.OnDetachedFromVisualTree(e);
     }
 
     private void Router_OnRouteChanged(object? sender, RouteChangedEventArgs e)
@@ -72,27 +79,26 @@ public class RouteViewHost : TransitioningContentControl
         // Apply null to guarantee that the current content is unloaded before the new content is loaded
         Content = null;
         // If Router property is null, fall back to default content
-        if (Router == null)
+        if (Router is null)
         {
-            
             Content = DefaultContent;
             return;
         }
         // If the route is null, fall back to default content
-        if (route == null)
+        if (route is null)
         {
             Content = DefaultContent;
             return;
         }
         // If the view locator is null, assume the route is resolvable by the ContentControl
-        if (ViewLocator == null)
+        if (ViewLocator is null)
         {
             Content = route;
             return;
         }
         // Resolve and apply the route
         var view = ViewLocator.Build(route);
-        if (view == null)
+        if (view is null)
         {
             Content = DefaultContent;
             return;

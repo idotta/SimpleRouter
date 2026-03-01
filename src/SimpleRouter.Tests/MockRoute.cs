@@ -1,29 +1,17 @@
-﻿namespace SimpleRouter.Tests;
+namespace SimpleRouter.Tests;
 
-internal class MockRoute : IRoute
+internal sealed class MockRoute(IRouterHost routerHost) : IRoute
 {
-    public MockRoute(IRouterHost routerHost)
-    {
-        RouterHost = routerHost;
-    }
-
     public string RouteName => "MockRoute";
 
-    public IRouterHost RouterHost { get; }
+    public IRouterHost RouterHost { get; } = routerHost;
 }
 
-internal class MockRouteWithParams : IRoute
+internal sealed class MockRouteWithParams(IRouterHost routerHost, int p1, string p2) : IRoute
 {
-    public MockRouteWithParams(IRouterHost routerHost, int p1, string p2)
-    {
-        RouterHost = routerHost;
-        P1 = p1;
-        P2 = p2;
-    }
-
     public string RouteName => "MockRoute";
 
-    public IRouterHost RouterHost { get; }
-    public int P1 { get; }
-    public string P2 { get; }
+    public IRouterHost RouterHost { get; } = routerHost;
+    public int P1 { get; } = p1;
+    public string P2 { get; } = p2;
 }
